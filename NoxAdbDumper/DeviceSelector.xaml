@@ -1,0 +1,13 @@
+﻿<Window x:Class="NoxAdbDumper.DeviceSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NoxAdbDumper"
+        mc:Ignorable="d"
+        Title="Device Selector" Height="250" Width="700" Loaded="DeviceSelector_Loaded">
+    <Grid>
+        <ListBox x:Name="ls_device" HorizontalAlignment="Left" Height="190" VerticalAlignment="Top" Width="694" Margin="0,0,-0.4,0"/>
+        <Button x:Name="btn_select" Content="Select" HorizontalAlignment="Left" Margin="0,190,-0.4,0" VerticalAlignment="Top" Width="694" Height="30" Click="btn_select_Click"/>
+    </Grid>
+</Window>
