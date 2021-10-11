@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -166,9 +166,11 @@ namespace NoxAdbDumper
             openFolderDialog.InitialFolder = App.Root;
             if (openFolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                RunNoxShell("push pmdump /data/local/tmp/pmdump");
-                RunNoxShell("/data/local/tmp/pmdump +r +w -x +p " + info.pid);
-                RunShell("nox_adb.exe", "data/local/tmp/output_pmdump.bin\" " + $"\"{Path.Combine(App.Root, "dump.bin")}\"");
+                RunShell("nox_adb.exe", "push pmdump /data/local/tmp/pmdump");
+                RunNoxShell("chmod 755 /data/local/tmp/pmdump");
+                RunNoxShell("cd /data/local/tmp && ./pmdump +r +w -x +p " + info.pid);
+                RunShell("nox_adb.exe", "pull data/local/tmp/output_pmdump.bin " + $"\"{Path.Combine(App.Root, "dump.bin")}\"");
+                RunNoxShell("rm /data/local/tmp/output_pmdump.bin");
             }
         }
 
@@ -194,19 +196,14 @@ namespace NoxAdbDumper
         {
             RefreshProcesses();
 
-            List<string> tmpList = new List<string>();
-            foreach (string s in ls_Proc.Items)
+            List<ProcStruct> tmpList = new List<ProcStruct>();
+            foreach (ProcStruct s in ls_Proc.Items)
             {
-                if (s.Contains(tb_Proc.Text))
+                if (s.Description.Contains(tb_Proc.Text))
                     tmpList.Add(s);
             }
 
-            ls_Proc.Items.Clear();
-
-            foreach (string s in tmpList)
-            {
-                ls_Proc.Items.Add(s);
-            }
+            ls_Proc.ItemsSource = tmpList;
         }
 
         private void tb_Mem_TextChanged(object sender, TextChangedEventArgs e)
@@ -303,7 +300,6 @@ namespace NoxAdbDumper
         public void RefreshProcesses()
         {
             int count = 0;
-            ls_Proc.Items.Clear();
 
             List<ProcStruct> LRC = new List<ProcStruct>();
 
